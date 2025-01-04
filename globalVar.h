@@ -4,3 +4,4 @@ extern const int ROW;
 extern const int CELL_SIZE;
 extern Color colLight;
 extern Color colDark;
+extern Color colFood;

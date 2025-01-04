@@ -19,7 +19,7 @@ public:
     draw()
     {
         Rectangle rec = {pos.x * CELL_SIZE, pos.y * CELL_SIZE, (float)CELL_SIZE, (float)CELL_SIZE};
-        DrawRectangleRounded(rec, 0.4, 4, {222, 89, 93, 255});
+        DrawRectangleRounded(rec, 0.4, 4, colFood);
     }
 
     bool findElement(Vector2 element, deque<Vector2> deque)

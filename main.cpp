@@ -8,14 +8,18 @@
 
 using namespace std;
 
-// Global variables
-Color colLight = {170, 205, 124, 255};
-Color colDark = {105, 140, 70, 255};
+// Global Graphics Variables
+Color colLight = {127, 179, 68, 255};
+Color colDark = {102, 149, 47, 255};
+Color colFood = {162, 245, 80, 255};
 const int COL = 20;
 const int ROW = 20;
 const int CELL_SIZE = 30;
 
+// Game Variables
+int score = 0;
 double lastUpdateTime = 0;
+bool gameOver, pause = false;
 bool eventTriggered(double interval);
 
 class Game
@@ -33,14 +37,24 @@ public:
 	void update()
 	{
 		snake.update();
-		checkCollision();
+		checkCollisionFood();
+		checkCollisionEdges();
 	}
 
-	void checkCollision()
+	void checkCollisionFood()
 	{
 		if (Vector2Equals(snake.body[0], apple.pos))
 		{
 			apple.pos = apple.randomPos(snake.body);
+			snake.addSegment = true;
+			score++;
+		}
+	}
+	void checkCollisionEdges()
+	{
+		if (snake.body[0].x < 0 || snake.body[0].x > COL || snake.body[0].y < 0 || snake.body[0].y > ROW)
+		{
+			gameOver = true;
 		}
 	}
 };
@@ -58,7 +72,7 @@ int main()
 	while (!WindowShouldClose())
 	{
 		// GAME UPDATES
-		if (eventTriggered(0.2))
+		if (eventTriggered(0.2) && !gameOver && !pause)
 		{
 			game.update();
 		}
@@ -79,17 +93,43 @@ int main()
 		{
 			game.snake.dir = {-1, 0};
 		}
+		if (IsKeyPressed('P') && !pause)
+		{
+			pause = true;
+		}
+		else if (IsKeyPressed('P') && pause)
+		{
+			pause = false;
+		}
 
 		// DRAWING
 		BeginDrawing();
-		ClearBackground(colLight);
-		game.draw();
+		ClearBackground(DARKGRAY);
 
+		if (!gameOver)
+		{
+			// Draw grid lines
+			for (int i = 0; i < COL; i++)
+			{
+				DrawLine(i * CELL_SIZE, 0, i * CELL_SIZE, 800, {0, 0, 0, 50});
+				for (int j = 0; j < ROW; j++)
+				{
+					DrawLine(0, j * CELL_SIZE, 800, j * CELL_SIZE, {0, 0, 0, 50});
+				}
+			}
+			game.draw();
+			if (pause)
+			{
+				DrawRectangle(0, 0, COL * CELL_SIZE, ROW * CELL_SIZE, {0, 0, 0, 100});
+				DrawText("Paused", GetScreenWidth() / 2 - MeasureText("Paused", 20) / 2, GetScreenHeight() / 2 - 50, 20, WHITE);
+			}
+		}
+		else
+		{
+			DrawText("Game Over!", GetScreenWidth() / 2 - MeasureText("Game Over!", 20) / 2, GetScreenHeight() / 2 - 50, 20, WHITE);
+		}
 		EndDrawing();
 	}
-
-	// cleanup, unload any textures if used.
-
 	CloseWindow();
 	return 0;
 }
