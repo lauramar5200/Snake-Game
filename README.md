@@ -7,4 +7,4 @@ Upcoming updates:
   - Implement GUI Screen Manager with Title, Menu, Gameplay, and End screens.
   - Add the ability to play again after a game over.
   - Implement game difficulty. Players will have the option to choose betwen easy, normal, hard, and variable difficulty. These difficulties change the rate ar which the game updates.
-  - Add theme configuration options. Will change the set of colours used for game items.
+  - Add theme configuration options. Will change the set of colours used for game objects.
